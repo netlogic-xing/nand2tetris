@@ -1,0 +1,220 @@
+function Bat.new 0
+push constant 5
+call Memory.alloc 1
+pop pointer 0
+// Let begin x
+push argument 0
+pop this 0
+// Let end
+// Let begin y
+push argument 1
+pop this 1
+// Let end
+// Let begin width
+push argument 2
+pop this 2
+// Let end
+// Let begin height
+push argument 3
+pop this 3
+// Let end
+// Let begin direction
+push constant 2
+pop this 4
+// Let end
+push pointer 0
+call Bat.show 1
+pop temp 0
+push pointer 0
+return
+function Bat.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+return
+function Bat.show 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push pointer 0
+call Bat.draw 1
+pop temp 0
+return
+function Bat.hide 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push pointer 0
+call Bat.draw 1
+pop temp 0
+return
+function Bat.draw 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+return
+function Bat.setDirection 0
+push argument 0
+pop pointer 0
+// Let begin direction
+push argument 1
+pop this 4
+// Let end
+return
+function Bat.getLeft 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Bat.getRight 0
+push argument 0
+pop pointer 0
+push this 0
+push this 2
+add
+return
+function Bat.setWidth 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Bat.hide 1
+pop temp 0
+// Let begin width
+push argument 1
+pop this 2
+// Let end
+push pointer 0
+call Bat.show 1
+pop temp 0
+return
+function Bat.move 0
+push argument 0
+pop pointer 0
+push this 4
+push constant 1
+eq
+if-goto move-0-true
+// Let begin x
+push this 0
+push constant 4
+add
+pop this 0
+// Let end
+push this 0
+push this 2
+add
+push constant 511
+gt
+if-goto move-1-true
+goto move-1-end
+label move-1-true
+// Let begin x
+push constant 511
+push this 2
+sub
+pop this 0
+// Let end
+label move-1-end
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 4
+sub
+push this 1
+push this 0
+push constant 1
+sub
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 2
+add
+push constant 3
+sub
+push this 1
+push this 0
+push this 2
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+goto move-0-end
+label move-0-true
+// Let begin x
+push this 0
+push constant 4
+sub
+pop this 0
+// Let end
+push this 0
+push constant 0
+lt
+if-goto move-2-true
+goto move-2-end
+label move-2-true
+// Let begin x
+push constant 0
+pop this 0
+// Let end
+label move-2-end
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 2
+add
+push constant 1
+add
+push this 1
+push this 0
+push this 2
+add
+push constant 4
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 0
+push constant 3
+add
+push this 1
+push this 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+label move-0-end
+return

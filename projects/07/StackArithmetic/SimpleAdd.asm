@@ -1,0 +1,14 @@
+@7
+D=A
+@SP
+AM=M+1
+M=D
+@8
+D=A
+@SP
+AM=M+1
+M=D
+D=M
+@SP
+AM=M-1
+M=D+M

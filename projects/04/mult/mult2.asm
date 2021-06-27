@@ -1,0 +1,25 @@
+// a*b=c
+@5
+D=A
+@a
+M=D
+@7
+D=A
+@b
+M=D
+(LOOP)
+@a
+D=M
+@END
+D;JEQ
+@b
+D=M
+@c
+M=D+M
+@a
+M=M-1
+@LOOP
+0;JMP
+(END)
+@END
+0;JMP

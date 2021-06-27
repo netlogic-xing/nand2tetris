@@ -1,0 +1,60 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/Computer.hdl
+
+/**
+ * The HACK computer, including CPU, ROM and RAM.
+ * When reset is 0, the program stored in the computer's ROM executes.
+ * When reset is 1, the execution of the program restarts. 
+ * Thus, to start a program's execution, reset must be pushed "up" (1)
+ * and "down" (0). From this point onward the user is at the mercy of 
+ * the software. In particular, depending on the program's code, the 
+ * screen may show some output and the user may be able to interact 
+ * with the computer via the keyboard.
+ */
+
+CHIP Computer {
+
+    IN reset;
+
+    PARTS:
+	ROM32K(address=pc,out=instruction,out[0]=instruction0,out[1]=instruction1,out[2]=instruction2,out[3]=instruction3,out[4]=instruction4,out[5]=instruction5,out[6]=instruction6,out[7]=instruction7,out[8]=instruction8,out[9]=instruction9,out[10]=instruction10,out[11]=instruction11,out[12]=instruction12,out[13]=instruction13,out[14]=instruction14,out[15]=instruction15);
+//	Memory(in=outM,load=writeM,address=addressM,out=m);
+
+DMux(in=writeM, sel=address14, a=load1, b=load2);
+    RAM16K(in=outM, load = load1,address[0]=address0,address[1]=address1,address[2]=address2,address[3]=address3,address[4]=address4,address[5]=address5,address[6]=address6,address[7]=address7,address[8]=address8,address[9]=address9,address[10]=address10,address[11]=address11,address[12]=address12,address[13]=address13, out=out1);
+    Screen(in=outM, load = load2,address[0]=address0,address[1]=address1,address[2]=address2,address[3]=address3,address[4]=address4,address[5]=address5,address[6]=address6,address[7]=address7,address[8]=address8,address[9]=address9,address[10]=address10,address[11]=address11,address[12]=address12, out=out2);
+    Mux16(a=out1, b=out2, sel=address14, out=normalout);
+    Keyboard(out=kbout);
+    Not(in=address13, out=n13);
+    Not(in=address14, out=n14);
+    Or8Way(in[0]=address0,in[1]=address1,in[2]=address2,in[3]=address3,in[4]=address4,in[5]=address5,in[6]=address6,in[7]=address7,out=o1);
+    Or8Way(in[0]=address8,in[1]=address9,in[2]=address10,in[3]=address11,in[4]=address12,in[5]=n13, in[6]=n14, in[7]=false, out=o2);
+    Or(a=o1,b=o2,out=normal);
+    Mux16(a=kbout,b=normalout,sel=normal, out=m);
+	//CPU(inM=m,instruction=instruction,reset=reset,outM=outM,writeM=writeM,addressM=addressM,pc=pc);
+	
+	Not(in=instruction15,out=ainstruction);
+    Mux16(a=aout,b=m,sel=instruction12,out=yout);
+    ALU(x=dout,y=yout,zx=instruction11, nx=instruction10, zy=instruction9, ny=instruction8, f=instruction7, no=instruction6,out=calcout, zr=zr, ng=ng);
+    Mux16(a=instruction,b=calcout, sel=instruction15, out=ain);//A-instruction load data
+    Or(a=ainstruction, b=instruction5,out=loada);
+    ARegister(in=ain, load=loada,out=aout);//Register A
+    And(a=instruction15, b=instruction4, out=loadd);
+    DRegister(in=calcout, load=loadd, out=dout);//Register D
+    And(a=instruction15, b=instruction3, out=selectoutm);
+    Mux16(a=false, b=calcout, sel=selectoutm, out=outM);//Memery[A]
+    And(a=instruction15, b=instruction3,out=writeM);
+    And16(a=true,b=aout, out[0..14]=addressM,out[0]=address0,out[1]=address1,out[2]=address2,out[3]=address3,out[4]=address4,out[5]=address5,out[6]=address6,out[7]=address7,out[8]=address8,out[9]=address9,out[10]=address10,out[11]=address11,out[12]=address12,out[13]=address13,out[14]=address14);
+    And(a=ng,b=instruction2,out=j1);
+    And(a=zr,b=instruction1,out=j2);
+    Not(in=ng,out=nng);
+    Not(in=zr,out=nzr);
+    And(a=nng,b=nzr, out=ge);
+    And(a=ge,b=instruction0,out=j3);
+    Or(a=j1,b=j2,out=j12);
+    Or(a=j12,b=j3,out=j123);
+    And(a=instruction15,b=j123, out=jmp);
+    PC(in=aout,load=jmp,reset=reset,inc=true,out[0..14]=pc);
+}

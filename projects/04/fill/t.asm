@@ -1,0 +1,36 @@
+//Make whole screen black if any key press.
+(LOOP)
+@KBD
+D=M
+@input
+M=D //input=key press
+@SCREEN
+D=A
+@i
+M=D
+(FILL)
+@input
+D=M
+@BLACK
+D;JGT
+@i
+D=M
+A=D
+M=0
+@FILLCON
+0;JMP
+(BLACK)
+@i
+D=M
+A=D
+M=-1
+(FILLCON)
+@i
+M=M+1
+D=M
+@24576
+D=A-D
+@FILL
+D;JGT
+@LOOP
+0;JMP

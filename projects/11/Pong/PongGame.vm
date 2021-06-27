@@ -1,0 +1,357 @@
+function PongGame.new 0
+push constant 7
+call Memory.alloc 1
+pop pointer 0
+call Screen.clearScreen 0
+pop temp 0
+// Let begin batWidth
+push constant 50
+pop this 6
+// Let end
+// Let begin bat
+push constant 230
+push constant 229
+push this 6
+push constant 7
+call Bat.new 4
+pop this 0
+// Let end
+// Let begin ball
+push constant 253
+push constant 222
+push constant 0
+push constant 511
+push constant 0
+push constant 229
+call Ball.new 6
+pop this 1
+// Let end
+push this 1
+push constant 400
+push constant 0
+call Ball.setDestination 3
+pop temp 0
+push constant 0
+push constant 238
+push constant 511
+push constant 240
+call Screen.drawRectangle 4
+pop temp 0
+push constant 22
+push constant 0
+call Output.moveCursor 2
+pop temp 0
+push constant 8
+call String.new 1
+push constant 83
+call String.appendChar 2
+push constant 99
+call String.appendChar 2
+push constant 111
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 58
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 48
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+// Let begin exit
+push constant 0
+pop this 3
+// Let end
+// Let begin score
+push constant 0
+pop this 4
+// Let end
+// Let begin wall
+push constant 0
+pop this 2
+// Let end
+// Let begin lastWall
+push constant 0
+pop this 5
+// Let end
+push pointer 0
+return
+function PongGame.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Bat.dispose 1
+pop temp 0
+push this 1
+call Ball.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+return
+function PongGame.newInstance 0
+// Let begin instance
+call PongGame.new 0
+pop static 0
+// Let end
+return
+function PongGame.getInstance 0
+push static 0
+return
+function PongGame.run 1
+push argument 0
+pop pointer 0
+label run-0-begin
+push this 3
+not
+if-goto run-0-true
+goto run-0-end
+label run-0-true
+label run-1-begin
+push local 0
+push constant 0
+eq
+push this 3
+not
+and
+if-goto run-1-true
+goto run-1-end
+label run-1-true
+// Let begin key
+call Keyboard.keyPressed 0
+pop local 0
+// Let end
+push this 0
+call Bat.move 1
+pop temp 0
+push pointer 0
+call PongGame.moveBall 1
+pop temp 0
+push constant 50
+call Sys.wait 1
+pop temp 0
+goto run-1-begin
+label run-1-end
+push local 0
+push constant 130
+eq
+if-goto run-2-true
+push local 0
+push constant 132
+eq
+if-goto run-3-true
+push local 0
+push constant 140
+eq
+if-goto run-4-true
+goto run-4-end
+label run-4-true
+// Let begin exit
+push constant 0
+not
+pop this 3
+// Let end
+label run-4-end
+goto run-3-end
+label run-3-true
+push this 0
+push constant 2
+call Bat.setDirection 2
+pop temp 0
+label run-3-end
+goto run-2-end
+label run-2-true
+push this 0
+push constant 1
+call Bat.setDirection 2
+pop temp 0
+label run-2-end
+label run-5-begin
+push local 0
+push constant 0
+eq
+not
+push this 3
+not
+and
+if-goto run-5-true
+goto run-5-end
+label run-5-true
+// Let begin key
+call Keyboard.keyPressed 0
+pop local 0
+// Let end
+push this 0
+call Bat.move 1
+pop temp 0
+push pointer 0
+call PongGame.moveBall 1
+pop temp 0
+push constant 50
+call Sys.wait 1
+pop temp 0
+goto run-5-begin
+label run-5-end
+goto run-0-begin
+label run-0-end
+push this 3
+if-goto run-6-true
+goto run-6-end
+label run-6-true
+push constant 10
+push constant 27
+call Output.moveCursor 2
+pop temp 0
+push constant 9
+call String.new 1
+push constant 71
+call String.appendChar 2
+push constant 97
+call String.appendChar 2
+push constant 109
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 32
+call String.appendChar 2
+push constant 79
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 114
+call String.appendChar 2
+call Output.printString 1
+pop temp 0
+label run-6-end
+return
+function PongGame.moveBall 5
+push argument 0
+pop pointer 0
+// Let begin wall
+push this 1
+call Ball.move 1
+pop this 2
+// Let end
+push this 2
+push constant 0
+gt
+push this 2
+push this 5
+eq
+not
+and
+if-goto moveBall-0-true
+goto moveBall-0-end
+label moveBall-0-true
+// Let begin lastWall
+push this 2
+pop this 5
+// Let end
+// Let begin bouncingDirection
+push constant 0
+pop local 0
+// Let end
+// Let begin batLeft
+push this 0
+call Bat.getLeft 1
+pop local 1
+// Let end
+// Let begin batRight
+push this 0
+call Bat.getRight 1
+pop local 2
+// Let end
+// Let begin ballLeft
+push this 1
+call Ball.getLeft 1
+pop local 3
+// Let end
+// Let begin ballRight
+push this 1
+call Ball.getRight 1
+pop local 4
+// Let end
+push this 2
+push constant 4
+eq
+if-goto moveBall-1-true
+goto moveBall-1-end
+label moveBall-1-true
+// Let begin exit
+push local 1
+push local 4
+gt
+push local 2
+push local 3
+lt
+or
+pop this 3
+// Let end
+push this 3
+not
+if-goto moveBall-2-true
+goto moveBall-2-end
+label moveBall-2-true
+push local 4
+push local 1
+push constant 10
+add
+lt
+if-goto moveBall-3-true
+push local 3
+push local 2
+push constant 10
+sub
+gt
+if-goto moveBall-4-true
+goto moveBall-4-end
+label moveBall-4-true
+// Let begin bouncingDirection
+push constant 1
+pop local 0
+// Let end
+label moveBall-4-end
+goto moveBall-3-end
+label moveBall-3-true
+// Let begin bouncingDirection
+push constant 1
+neg
+pop local 0
+// Let end
+label moveBall-3-end
+// Let begin batWidth
+push this 6
+push constant 2
+sub
+pop this 6
+// Let end
+push this 0
+push this 6
+call Bat.setWidth 2
+pop temp 0
+// Let begin score
+push this 4
+push constant 1
+add
+pop this 4
+// Let end
+push constant 22
+push constant 7
+call Output.moveCursor 2
+pop temp 0
+push this 4
+call Output.printInt 1
+pop temp 0
+label moveBall-2-end
+label moveBall-1-end
+push this 1
+push local 0
+call Ball.bounce 2
+pop temp 0
+label moveBall-0-end
+return
